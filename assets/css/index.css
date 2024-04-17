@@ -1,5 +1,6 @@
 body{
     margin: auto;
+    background-color: #F2F2F2;
 }
 
 header{
@@ -24,6 +25,14 @@ header{
     margin: 0;
     padding-top: 50px;
 }
+.headerMap{
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    font-weight: 400;
+    margin: 0;
+    padding-top: 50px;    
+}
 
 
 .headerIcon{
@@ -31,6 +40,88 @@ header{
     position: absolute;
     right: 25%;
     top: 70px;
+}
+
+/* Landing */
+.pollenContainer{
+    border: #4BA598 solid 2px;
+    background-color: white;
+    margin: 40px;
+    border-radius: 20px;
+}
+
+.pollenLanding{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 9vw;
+    font-weight: 400;
+    margin: 0;
+    text-align: right;
+    margin-right: 40px;
+}
+
+/* Settings */
+.settingsSection{
+    border: #4BA598 2px solid;
+    border-radius: 20px;
+    background-color: white;
+    margin: 20px;
+}
+
+.myAllergies{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 400;
+    font-size: 7vw;
+    text-align: center;
+    margin: 10px;
+}
+
+.Pollen{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 7vw;
+    font-weight: 400;
+    margin: 0;
+    margin-left: 15px;
+}
+
+.toggleContainer{
+display: grid;
+grid-template-columns: 1fr 1fr;
+margin: 35px 0;
+
+}
+
+.right{
+    background-color: #F2F2F2;
+    border-radius: 1000px;
+    height: 35px;
+    width: 35px;
+    margin-left: 34px;
+
+}
+
+.left{
+    background-color: #F2F2F2;
+    border-radius: 1000px;
+    height: 35px;
+    width: 35px;
+}
+
+.on{
+    border: black 2px solid;
+    width: 70px;
+    height: 35px;
+    border-radius: 20px;
+    background-color: #4BA598;
+    margin-left: 90px; 
+}
+
+.off{
+    border: black 2px solid;
+    width: 70px;
+    height: 35px;
+    border-radius: 20px;
+    background-color: #EC9AAA;
+    margin-left: 90px;
 }
 
 footer{
