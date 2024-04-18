@@ -11,8 +11,12 @@ const pollenTranslations = {
     "olive": "Oliven",
     "ragweed": "Ambrosia"
 };
+
+let pollenContainer;
 let formattedKeys;
 let city;
+let currentAmounts;
+const pollenImages = ['alder.jpg', 'birch.jpg', 'grass.jpg', 'mugwort.jpg', 'olive.jpg', 'ragweed.jpg'];
 
 // Function to clear all sections
 function clearSection() {
@@ -41,6 +45,19 @@ function createCityView(city) {
 
 function ReceivePollenData(data) {
     let pollenType = data.hourly;
+
+    currentAmounts = [];
+
+    currentAmounts.push(data.current.alder_pollen);
+    currentAmounts.push(data.current.birch_pollen);
+    currentAmounts.push(data.current.grass_pollen);
+    currentAmounts.push(data.current.mugwort_pollen);
+    currentAmounts.push(data.current.olive_pollen);
+    currentAmounts.push(data.current.ragweed_pollen);
+
+    console.log(currentAmounts);
+
+
     let pollenKeys = Object.keys(pollenType).filter(key => key.endsWith('_pollen'));
     formattedKeys = pollenKeys.map(key => key.replace('_pollen', ''));
 }
@@ -123,20 +140,90 @@ function CreateLanding() {
     clearSection();
     createCityView(city);
 
-    formattedKeys.forEach(key => {
-        if (localStorage.getItem(key) === 'on') {
-            let pollenTypeLanding = document.createElement('h3');
-            pollenTypeLanding.className = 'Pollen';
-            pollenTypeLanding.innerHTML = pollenTranslations[key] || key;
+    const colorThresholds = {
+        blue: 10,
+        orange: 100
+    };
 
-            let pollenContainer = document.createElement('div');
+    formattedKeys.forEach((key, index) => {
+        if (localStorage.getItem(key) === 'on') {
+            let pollenType = pollenTranslations[key] || key;
+            let pollenAmount = currentAmounts[formattedKeys.indexOf(key)]; // Get the current amount corresponding to the key
+            let pollenImage = pollenImages[index]; // Get the corresponding image for the pollen type
+
+            // Create elements for pollen type, amount, and image
+
+            let pollenTypeElement = document.createElement('h3');
+            pollenTypeElement.className = 'pollenLanding';
+            pollenTypeElement.innerHTML = pollenType;
+
+            let pollenAmountElement = document.createElement('h3');
+            pollenAmountElement.className = 'PollenAmount';
+            pollenAmountElement.innerHTML = `${pollenAmount}`;
+
+            let PollenUnit = document.createElement('h5');
+            PollenUnit.className = 'PollenUnit';
+            PollenUnit.innerHTML = 'p/m<sup>3</sup>';
+
+            let PollenIndicator = document.createElement('div');
+            PollenIndicator.className = 'PollenIndicator';
+
+            let pollenImageElement = document.createElement('img');
+            pollenImageElement.className = 'PollenImage';
+            pollenImageElement.src = './assets/pollen_Billeder/' + pollenImage;
+            pollenImageElement.alt = `${pollenType} Pollen`;
+
+            // Create Containers
+            pollenContainer = document.createElement('div');
             pollenContainer.className = 'pollenContainer';
 
-            pollenContainer.appendChild(pollenTypeLanding);
+            let ImageContainer = document.createElement('section');
+            ImageContainer.className = 'ImageContainer';
+
+            let InfoContainer = document.createElement('section');
+            InfoContainer.className = 'InfoContainer';
+
+            let PollenAmountContainer = document.createElement('section');
+            PollenAmountContainer.className = 'PollenAmountContainer';
+
+            // Determine color based on pollen amount
+             let color;
+             if (pollenAmount < colorThresholds.blue) {
+            color = '#50B8AE';
+             } else if (pollenAmount >= colorThresholds.blue && pollenAmount < colorThresholds.orange) {
+            color = '#F1C879';
+            } else {
+            color = '#EC9AAA';
+            }
+
+            // Set the background color of the PollenIndicator
+            PollenIndicator.style.backgroundColor = color;
+
+
+            // Append elements to the containers
+            pollenContainer.appendChild(ImageContainer);
+            pollenContainer.appendChild(InfoContainer);
+
+            ImageContainer.appendChild(pollenImageElement);
+
+            InfoContainer.appendChild(pollenTypeElement);
+            InfoContainer.appendChild(PollenAmountContainer);
+            InfoContainer.appendChild(PollenIndicator);
+
+            PollenAmountContainer.appendChild(pollenAmountElement);
+            PollenAmountContainer.appendChild(PollenUnit);
+
             ViewSection.appendChild(pollenContainer);
         }
     });
 }
+
+
+function CreatePollenView(){
+    clearSection();
+    createCityView(city);
+}
+
 
 // Function to initialize the page
 function initializePage() {
@@ -182,6 +269,7 @@ settings.addEventListener('click', function() {
 
 map.addEventListener('click', CreateMap);
 home.addEventListener('click', CreateLanding);
+pollenContainer.addEventListener('click', CreatePollenView);
 
 // Initial call to initialize the page
 initializePage();
