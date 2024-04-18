@@ -215,6 +215,7 @@ function CreateLanding() {
 
             ViewSection.appendChild(pollenContainer);
         }
+        pollenContainer.addEventListener('click', CreatePollenView);
     });
 }
 
@@ -269,7 +270,6 @@ settings.addEventListener('click', function() {
 
 map.addEventListener('click', CreateMap);
 home.addEventListener('click', CreateLanding);
-pollenContainer.addEventListener('click', CreatePollenView);
 
 // Initial call to initialize the page
 initializePage();
