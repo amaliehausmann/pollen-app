@@ -1,3 +1,4 @@
+// Globals
 const settings = document.getElementById('settings');
 const map = document.getElementById('map');
 const home = document.getElementById('home');
@@ -9,13 +10,18 @@ const pollenTranslations = {
     "grass": "Græs",
     "mugwort": "Bynke",
     "olive": "Oliven",
-    "ragweed": "Ambrosia"
+    "ragweed": "Ambrosie"
 };
 
 let pollenContainer;
 let formattedKeys;
 let city;
 let currentAmounts;
+let hourlyAmounts;
+let pollenType;
+let pollenAmount;
+let pollenImage;
+
 const pollenImages = ['alder.jpg', 'birch.jpg', 'grass.jpg', 'mugwort.jpg', 'olive.jpg', 'ragweed.jpg'];
 
 // Function to clear all sections
@@ -57,6 +63,17 @@ function ReceivePollenData(data) {
 
     console.log(currentAmounts);
 
+    hourlyAmounts = [];
+    
+    hourlyAmounts.push(data.hourly.alder_pollen);
+    hourlyAmounts.push(data.hourly.birch_pollen);
+    hourlyAmounts.push(data.hourly.grass_pollen);
+    hourlyAmounts.push(data.hourly.mugwort_pollen);
+    hourlyAmounts.push(data.hourly.olive_pollen);
+    hourlyAmounts.push(data.hourly.ragweed_pollen);
+
+
+    console.log(hourlyAmounts)
 
     let pollenKeys = Object.keys(pollenType).filter(key => key.endsWith('_pollen'));
     formattedKeys = pollenKeys.map(key => key.replace('_pollen', ''));
@@ -148,11 +165,10 @@ function CreateLanding() {
     formattedKeys.forEach((key, index) => {
         if (localStorage.getItem(key) === 'on') {
             let pollenType = pollenTranslations[key] || key;
-            let pollenAmount = currentAmounts[formattedKeys.indexOf(key)]; // Get the current amount corresponding to the key
-            let pollenImage = pollenImages[index]; // Get the corresponding image for the pollen type
+            let pollenAmount = currentAmounts[index]; // Use the index directly
+            let pollenImage = pollenImages[index];
 
             // Create elements for pollen type, amount, and image
-
             let pollenTypeElement = document.createElement('h3');
             pollenTypeElement.className = 'pollenLanding';
             pollenTypeElement.innerHTML = pollenType;
@@ -174,7 +190,7 @@ function CreateLanding() {
             pollenImageElement.alt = `${pollenType} Pollen`;
 
             // Create Containers
-            pollenContainer = document.createElement('div');
+            let pollenContainer = document.createElement('div');
             pollenContainer.className = 'pollenContainer';
 
             let ImageContainer = document.createElement('section');
@@ -187,18 +203,17 @@ function CreateLanding() {
             PollenAmountContainer.className = 'PollenAmountContainer';
 
             // Determine color based on pollen amount
-             let color;
-             if (pollenAmount < colorThresholds.blue) {
-            color = '#50B8AE';
-             } else if (pollenAmount >= colorThresholds.blue && pollenAmount < colorThresholds.orange) {
-            color = '#F1C879';
+            let color;
+            if (pollenAmount < colorThresholds.blue) {
+                color = '#50B8AE';
+            } else if (pollenAmount >= colorThresholds.blue && pollenAmount < colorThresholds.orange) {
+                color = '#F1C879';
             } else {
-            color = '#EC9AAA';
+                color = '#EC9AAA';
             }
 
             // Set the background color of the PollenIndicator
             PollenIndicator.style.backgroundColor = color;
-
 
             // Append elements to the containers
             pollenContainer.appendChild(ImageContainer);
@@ -214,16 +229,154 @@ function CreateLanding() {
             PollenAmountContainer.appendChild(PollenUnit);
 
             ViewSection.appendChild(pollenContainer);
+            
+            // Attach event listener to pollenContainer
+            pollenContainer.addEventListener('click', function() {
+                CreatePollenView(pollenType, pollenAmount, pollenImage, hourlyAmounts, index);
+            });
         }
-        pollenContainer.addEventListener('click', CreatePollenView);
+    });
+}
+
+function getCurrentHour() {
+    return new Date().getHours();
+}
+
+function CreatePollenView(selectedPollenType, pollenViewAmount, pollenViewImage, hourlyAmounts, index) {
+    clearSection();
+    createCityView(city);
+
+    console.log("Selected Pollen Type:", selectedPollenType);
+
+    const currentHour = getCurrentHour();
+
+    const pollenAmountsForNextFiveHours = [];
+    for (let i = currentHour; i < currentHour + 5; i++) {
+        const hourIndex = i % 24; // Ensure it loops around to 0-23
+        const hour = `${(i % 24).toString().padStart(2, '0')}.00`; // Format hour as "HH.00"
+        const pollenAmountForHour = hourlyAmounts[index][hourIndex];
+        pollenAmountsForNextFiveHours.push({ hour, amount: pollenAmountForHour });
+    }
+
+    // Create elements to display the selected pollen type, image, and amount
+    let pollenTypeElement = document.createElement('h3');
+    pollenTypeElement.innerHTML = selectedPollenType;
+    pollenTypeElement.className = 'SelectedPollenType';
+
+    let pollenImageElement = document.createElement('img');
+    pollenImageElement.src = './assets/pollen_Billeder/' + pollenViewImage;
+    pollenImageElement.alt = `${selectedPollenType} Pollen`;
+    pollenImageElement.className = 'pollenViewImage';
+
+    let pollenAmountElement = document.createElement('h3');
+    pollenAmountElement.innerHTML = `${pollenViewAmount}`;
+    pollenAmountElement.className = 'pollenViewAmount';
+
+    let pollenViewAmountUnit = document.createElement('h5');
+    pollenViewAmountUnit.className = 'pollenViewAmountUnit';
+    pollenViewAmountUnit.innerHTML = 'p/m<sup>3</sup>';
+
+    let pollenviewindicator = document.createElement('div');
+    pollenviewindicator.className = 'pollenViewIndicator';
+
+    // create containers
+    let pollenTopViewContainer = document.createElement('div');
+    pollenTopViewContainer.className = 'topContainer';
+
+    let pollenViewContainer = document.createElement('div');
+    pollenViewContainer.className = 'pollenViewContainer';
+
+    let pollenViewImageContainer = document.createElement('section');
+    pollenViewImageContainer.className = 'viewImageContainer';
+
+    let pollenViewInfoContainer = document.createElement('section');
+    pollenViewInfoContainer.className = 'viewInfoContainer';
+
+    let pollenViewAmountContainer = document.createElement('section');
+    pollenViewAmountContainer.className = 'pollenViewAmountContainer';
+
+    let pollenHourlyContainer = document.createElement('section');
+    pollenHourlyContainer.className = 'PollenHourlyContainer';
+
+    // Append elements to the view section
+    pollenTopViewContainer.appendChild(pollenViewImageContainer);
+    pollenTopViewContainer.appendChild(pollenViewInfoContainer);
+    pollenViewContainer.appendChild(pollenTopViewContainer);
+    pollenViewContainer.appendChild(pollenHourlyContainer);
+
+    pollenViewImageContainer.appendChild(pollenImageElement);
+
+    pollenViewInfoContainer.appendChild(pollenTypeElement);
+    pollenViewInfoContainer.appendChild(pollenViewAmountContainer);
+    pollenViewInfoContainer.appendChild(pollenviewindicator);
+
+    pollenViewAmountContainer.appendChild(pollenAmountElement);
+    pollenViewAmountContainer.appendChild(pollenViewAmountUnit);
+
+    // Append hour and amount containers for each hour
+    pollenAmountsForNextFiveHours.forEach(hourlyData => {
+        const hourElement = document.createElement('p');
+        hourElement.innerHTML = hourlyData.hour;
+        hourElement.className = 'hourElement';
+
+        const amountElement = document.createElement('p');
+        amountElement.innerHTML = `${hourlyData.amount}`;
+        amountElement.className = 'amountElement';
+        
+        // Set background color and width based on pollen amount
+        if (hourlyData.amount < 10) {
+            amountElement.style.backgroundColor = '#50B8AE';
+            amountElement.style.width = '10vw';
+        } else if (hourlyData.amount >= 10 && hourlyData.amount < 100) {
+            amountElement.style.backgroundColor = '#F1C879';
+            amountElement.style.width = '18vw';
+        } else {
+            amountElement.style.backgroundColor = '#EC9AAA';
+            amountElement.style.width = '28vw';
+        }
+
+        const hourContainer = document.createElement('div');
+        hourContainer.className = 'hourContainer';
+        hourContainer.appendChild(hourElement);
+
+        const amountContainer = document.createElement('div');
+        amountContainer.className = 'amountContainer';
+        amountContainer.appendChild(amountElement);
+
+        const hourlyContainer = document.createElement('div');
+        hourlyContainer.className = 'hourlyContainer';
+        hourlyContainer.appendChild(hourContainer);
+        hourlyContainer.appendChild(amountContainer);
+
+        pollenHourlyContainer.appendChild(hourlyContainer);
+    });
+
+        // Set color of pollen view indicator based on pollen amount
+        if (pollenViewAmount < 10) {
+            pollenviewindicator.style.backgroundColor = '#50B8AE';
+        } else if (pollenViewAmount >= 10 && pollenViewAmount < 100) {
+            pollenviewindicator.style.backgroundColor = '#F1C879';
+        } else {
+            pollenviewindicator.style.backgroundColor = '#EC9AAA';
+        }
+    
+
+    ViewSection.appendChild(pollenViewContainer);
+
+    // event listener to go back to landing page when the view container is clicked
+    pollenViewContainer.addEventListener('click', function() {
+        CreateLanding();
     });
 }
 
 
-function CreatePollenView(){
-    clearSection();
-    createCityView(city);
-}
+
+
+
+
+
+
+
 
 
 // Function to initialize the page

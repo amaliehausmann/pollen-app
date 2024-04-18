@@ -47,7 +47,8 @@ header{
 .pollenContainer{
     border: #4BA598 solid 2px;
     background-color: white;
-    margin: 40px;
+    margin: 20px;
+    margin-bottom: 50px;
     border-radius: 20px;
     display: grid;
     grid-template-columns: 50% 50%;
@@ -101,6 +102,113 @@ header{
     margin-top: 2vw;
     border-radius: 10px;
 }
+
+/* Pollen View */
+.pollenViewContainer {
+    border: #4BA598 solid 2px;
+    background-color: white;
+    margin: 40px;
+    border-radius: 20px;
+    padding-bottom: 5vh;
+}
+
+.topContainer{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-bottom: 5vh;
+}
+
+.viewImageContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pollenViewImage{
+    width: 90%;
+    height: 90%;
+    border-radius: 5px;
+}
+
+.SelectedPollenType{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 9vw;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.pollenViewAmount{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 8vw;
+    margin: 0;
+}
+
+.pollenViewAmountUnit{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 5vw;
+    margin: 0;
+    margin-top: 2.5vw;
+    letter-spacing: -0.7px;
+}
+
+.pollenViewAmountContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.pollenViewIndicator{
+    background-color: red;
+    height: 2vh;
+    width: 25vw;
+    margin: auto;
+    margin-top: 2vw;
+    border-radius: 10px;
+}
+
+
+.hourlyContainer{
+display: grid;
+grid-template-columns: 1fr 1fr;
+margin: 0;
+}
+
+.hourContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hourElement{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    font-size: 6vw;
+    font-weight: 500;
+    margin: 0;
+}
+
+.amountElement{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #EC9AAA;
+    font-size: 5vw;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 1vw 10px;
+    margin: 4vw 0;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+}
+
+.amountContainer{
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    
+}
+
+
 
 
 /* Settings */
