@@ -1,6 +1,6 @@
 // Globals
 const settings = document.getElementById('settings');
-const map = document.getElementById('map');
+const maps = document.getElementById('maps');
 const home = document.getElementById('home');
 const headerSection = document.getElementById('header');
 const ViewSection = document.getElementById('viewSection');
@@ -21,6 +21,9 @@ let hourlyAmounts;
 let pollenType;
 let pollenAmount;
 let pollenImage;
+let latitude;
+let longitude;
+let map;
 
 const pollenImages = ['alder.jpg', 'birch.jpg', 'grass.jpg', 'mugwort.jpg', 'olive.jpg', 'ragweed.jpg'];
 
@@ -47,6 +50,8 @@ function createCityView(city) {
 
     headerSection.appendChild(cityName);
     headerSection.appendChild(HeaderIcon);
+
+
 }
 
 function ReceivePollenData(data) {
@@ -61,8 +66,6 @@ function ReceivePollenData(data) {
     currentAmounts.push(data.current.olive_pollen);
     currentAmounts.push(data.current.ragweed_pollen);
 
-    console.log(currentAmounts);
-
     hourlyAmounts = [];
     
     hourlyAmounts.push(data.hourly.alder_pollen);
@@ -72,8 +75,6 @@ function ReceivePollenData(data) {
     hourlyAmounts.push(data.hourly.olive_pollen);
     hourlyAmounts.push(data.hourly.ragweed_pollen);
 
-
-    console.log(hourlyAmounts)
 
     let pollenKeys = Object.keys(pollenType).filter(key => key.endsWith('_pollen'));
     formattedKeys = pollenKeys.map(key => key.replace('_pollen', ''));
@@ -142,7 +143,30 @@ function CreateSettings(formattedKeys) {
     });
 }
 
-// Create Map
+
+function createMapView (latitude, longitude) {
+
+   
+    // Temp map container
+    const mapDiv = document.createElement('div');
+    mapDiv.setAttribute('id', 'map');
+    mapDiv.innerHTML = "";
+   
+    // Append the map div to the mapContainer
+    ViewSection.appendChild(mapDiv);
+
+     map = L.map('map').setView([latitude, longitude], 13);
+   
+     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    
+    L.marker([latitude, longitude]).addTo(map)
+        .openPopup();
+   }
+
+
+// Define CreateMap function
 function CreateMap() {
     clearSection();
 
@@ -150,6 +174,10 @@ function CreateMap() {
     mapIcon.className = 'headerMap';
     mapIcon.innerHTML = 'Kort';
     headerSection.appendChild(mapIcon);
+
+    const mapContainer = document.getElementById("app");
+
+    createMapView(latitude,longitude);
 }
 
 // Create Landing
@@ -369,22 +397,12 @@ function CreatePollenView(selectedPollenType, pollenViewAmount, pollenViewImage,
     });
 }
 
-
-
-
-
-
-
-
-
-
-
 // Function to initialize the page
 function initializePage() {
     // Get current location
     navigator.geolocation.getCurrentPosition(function(position) {
-        let latitude = position.coords.latitude;
-        let longitude = position.coords.longitude;
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
 
         const reverseGeocodeUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
 
@@ -421,7 +439,7 @@ settings.addEventListener('click', function() {
     CreateSettings(formattedKeys);
 });
 
-map.addEventListener('click', CreateMap);
+maps.addEventListener('click', CreateMap);
 home.addEventListener('click', CreateLanding);
 
 // Initial call to initialize the page
