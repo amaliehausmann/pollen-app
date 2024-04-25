@@ -1,5 +1,6 @@
 {
-    "name": "PollenTrack",
+    "id": "pollenAppId",
+    "name": "PollenTracker",
     "short_name": "PollenTrack",
     "start_url": "https://pollentracker.netlify.app",
     "display": "standalone",
