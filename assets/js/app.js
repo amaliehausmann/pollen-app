@@ -43,7 +43,7 @@ function createCityView(city) {
     cityName.className = 'cityName';
 
     let HeaderIcon = document.createElement('img');
-    HeaderIcon.src = 'assets/icons/Vector 10.svg'; 
+    HeaderIcon.src = './assets/icons/Vector 10.svg'; 
     HeaderIcon.className = 'headerIcon';
 
     cityName.innerHTML = city;
