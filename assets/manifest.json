@@ -10,12 +10,12 @@
     "orientation": "portrait",
     "icons": [
       {
-        "src": "./assets/icons/pollen_icon_192.png",
+        "src": "./icons/pollen_icon_192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "./assets/icons/pollen_icon_512.png",
+        "src": "./icons/pollen_icon_512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
