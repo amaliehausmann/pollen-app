@@ -1,18 +1,20 @@
 {
     "name": "PollenTrack",
     "short_name": "PollenTrack",
-    "start_url": "/",
+    "start_url": "https://pollentracker.netlify.app",
     "display": "standalone",
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
+    "theme_color": "#4BA598",
+    "background_color": "#F2F2F2",
+    "description": "App that checks how much pollen there is at your location",
+    "orientation": "portrait",
     "icons": [
       {
-        "src": "/icon-192x192.png",
+        "src": "./assets/icons/pollen_icon_192.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "/icon-512x512.png",
+        "src": "./assets/icons/pollen_icon_512.png",
         "type": "image/png",
         "sizes": "512x512"
       }
